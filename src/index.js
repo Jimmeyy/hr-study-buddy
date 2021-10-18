@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from 'views/App';
 
-console.log("foo");
+console.log('foo');
+console.log('bar');
 
 ReactDOM.render(
   <React.StrictMode>
