@@ -5,11 +5,9 @@ import Button from 'components/atoms/Button/Button';
 import Average from 'components/atoms/Average/Average';
 
 const UsersListItem = ({
-    index,
+    deleteUser,
     userData: { name, average, attendance = '0%' },
 }) => {
-    const showIndex = (index) => alert(`This is student #${index + 1}`);
-
     return (
         <Wrapper>
             <Average average={average} />
@@ -17,13 +15,13 @@ const UsersListItem = ({
                 <p>{name}</p>
                 <p>attendance: {attendance}%</p>
             </StyledInfo>
-            <Button onClick={() => showIndex(index)} />
+            <Button onClick={() => deleteUser(name)} />
         </Wrapper>
     );
 };
 
 UsersListItem.propTypes = {
-    index: PropTypes.number,
+    deleteUser: PropTypes.func,
     userData: PropTypes.shape({
         name: PropTypes.string.isRequired,
         average: PropTypes.string.isRequired,
