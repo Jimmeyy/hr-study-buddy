@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { users } from 'data/users';
+import React, { useState, useEffect, useRef } from 'react';
+import { users as usersData } from 'data/users';
 import { Wrapper, StyledList } from './UsersList.styled';
 import UsersListItem from 'components/molecules/UsersListItem/UsersListItem';
 
@@ -7,55 +7,64 @@ const mockAPI = (success) => {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             if (success) {
-                resolve([...users]);
+                resolve([...usersData]);
             } else {
                 reject({ message: 'Error' });
             }
         }, 2000);
     });
 };
-class UsersList extends Component {
-    state = {
-        users: [],
-        isLoading: true,
-    };
 
-    componentDidMount() {
+// Custom hook, same as useEffect but without first render
+const useDidMountEffect = (func, deps) => {
+    const didMount = useRef(false);
+
+    useEffect(() => {
+        if (didMount.current) func();
+        else didMount.current = true;
+    }, deps);
+};
+
+const UsersList = () => {
+    const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
         mockAPI(true)
             .then((data) => {
-                this.setState({
-                    users: data,
-                    isLoading: false,
-                });
+                setUsers(data);
+                setIsLoading(!isLoading);
             })
             .catch((err) => console.log(err));
-    }
+    }, []);
 
-    deleteUser = (name) => {
-        const filteredusers = this.state.users.filter(
-            (user) => user.name !== name
-        );
-        this.setState({ users: filteredusers });
+    // useEffect(() => {
+    //     console.log('isLoading state has changed.');
+    // }, [isLoading]);
+
+    useDidMountEffect(() => {
+        console.log('isLoading state has changed.');
+    }, [isLoading]);
+
+    const deleteUser = (name) => {
+        const filteredusers = users.filter((user) => user.name !== name);
+        setUsers(filteredusers);
     };
 
-    render() {
-        const { users } = this.state;
-
-        return (
-            <Wrapper>
-                {this.state.isLoading ? 'Loading...' : 'Users List'}
-                <StyledList>
-                    {users.map((userData, index) => (
-                        <UsersListItem
-                            key={index}
-                            userData={userData}
-                            deleteUser={this.deleteUser}
-                        />
-                    ))}
-                </StyledList>
-            </Wrapper>
-        );
-    }
-}
+    return (
+        <Wrapper>
+            {isLoading ? 'Loading...' : 'Users List'}
+            <StyledList>
+                {users.map((userData, index) => (
+                    <UsersListItem
+                        key={index}
+                        userData={userData}
+                        deleteUser={deleteUser}
+                    />
+                ))}
+            </StyledList>
+        </Wrapper>
+    );
+};
 
 export default UsersList;
