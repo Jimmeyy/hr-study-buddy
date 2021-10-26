@@ -13,7 +13,7 @@ const initialFormState = {
 
 const AddUser = () => {
     const [formValues, setFormValues] = useState(initialFormState);
-    const context = useContext(UsersContext);
+    const { handleAddUser } = useContext(UsersContext);
 
     const handleInputChange = (event) => {
         setFormValues({
@@ -24,7 +24,7 @@ const AddUser = () => {
 
     const handleSubmitUser = (event) => {
         event.preventDefault();
-        context.handleAddUser(formValues);
+        handleAddUser(formValues);
 
         setFormValues(initialFormState);
     };
