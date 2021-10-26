@@ -1,87 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import UsersList from 'components/organisms/UsersList/UsersList';
-import Form from 'components/organisms/Form/Form';
+import React from 'react';
 import MainTemplate from 'components/templates/MainTemplate/MainTemplate';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from 'assets/styles/GlobalStyle';
 import { theme } from 'assets/styles/theme';
 import { Wrapper } from './Root.styles';
-import { mockAPI, useDidMountEffect } from 'helpers';
 import Dashboard from './Dashboard';
 import AddUser from './AddUser';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-
-const initialFormState = {
-    name: '',
-    attendance: '',
-    average: '',
-};
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import UsersProvider from 'providers/UsersProvider';
 
 const Root = () => {
-    const [formValues, setFormValues] = useState(initialFormState);
-    const [users, setUsers] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        mockAPI(true)
-            .then((data) => {
-                setUsers(data);
-                setIsLoading(!isLoading);
-            })
-            .catch((err) => console.log(err));
-    }, []);
-
-    useDidMountEffect(() => {
-        console.log('isLoading state has changed.');
-    }, [isLoading]);
-
-    const deleteUser = (name) => {
-        const filteredusers = users.filter((user) => user.name !== name);
-        setUsers(filteredusers);
-    };
-
-    const handleInputChange = (event) => {
-        setFormValues({
-            ...formValues,
-            [event.target.name]: event.target.value,
-        });
-    };
-
-    const handleAddUser = (event) => {
-        event.preventDefault();
-        const newUser = {
-            name: formValues.name,
-            attendance: formValues.attendance,
-            average: formValues.average,
-        };
-
-        setUsers([newUser, ...users]);
-        setFormValues(initialFormState);
-    };
-
     return (
         <Router>
             <ThemeProvider theme={theme}>
                 <GlobalStyle />
                 <MainTemplate>
-                    <Wrapper>
-                        <Switch>
-                            <Route path="/" exact>
-                                <Dashboard
-                                    users={users}
-                                    isLoading={isLoading}
-                                    deleteUser={deleteUser}
-                                />
-                            </Route>
-                            <Route path="/add-user">
-                                <AddUser
-                                    handleInputChange={handleInputChange}
-                                    formValues={formValues}
-                                    handleAddUser={handleAddUser}
-                                />
-                            </Route>
-                        </Switch>
-                    </Wrapper>
+                    <UsersProvider>
+                        <Wrapper>
+                            <Switch>
+                                <Route path="/" exact>
+                                    <Dashboard />
+                                </Route>
+                                <Route path="/add-user">
+                                    <AddUser />
+                                </Route>
+                            </Switch>
+                        </Wrapper>
+                    </UsersProvider>
                 </MainTemplate>
             </ThemeProvider>
         </Router>
