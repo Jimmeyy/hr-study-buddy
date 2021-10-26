@@ -4,7 +4,7 @@ import UsersListItem from 'components/molecules/UsersListItem/UsersListItem';
 
 const UsersList = ({ users, deleteUser, isLoading }) => {
     return (
-        <Wrapper>
+        <>
             {isLoading ? (
                 <StyledTitle>Loading...</StyledTitle>
             ) : (
@@ -19,7 +19,7 @@ const UsersList = ({ users, deleteUser, isLoading }) => {
                     />
                 ))}
             </StyledList>
-        </Wrapper>
+        </>
     );
 };
 

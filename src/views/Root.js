@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import UsersList from 'components/organisms/UsersList/UsersList';
 import Form from 'components/organisms/Form/Form';
+import MainTemplate from 'components/templates/MainTemplate/MainTemplate';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from 'assets/styles/GlobalStyle';
 import { theme } from 'assets/styles/theme';
 import { Wrapper } from './Root.styles';
 import { mockAPI, useDidMountEffect } from 'helpers';
+import Dashboard from './Dashboard';
+import AddUser from './AddUser';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 const initialFormState = {
@@ -60,28 +63,26 @@ const Root = () => {
         <Router>
             <ThemeProvider theme={theme}>
                 <GlobalStyle />
-                <Wrapper>
-                    <nav>
-                        <Link to="/">Home</Link>
-                        <Link to="/add-user">Add-user</Link>
-                    </nav>
-                    <Switch>
-                        <Route path="/" exact>
-                            <UsersList
-                                users={users}
-                                isLoading={isLoading}
-                                deleteUser={deleteUser}
-                            />
-                        </Route>
-                        <Route path="/add-user">
-                            <Form
-                                handleInputChange={handleInputChange}
-                                formValues={formValues}
-                                handleAddUser={handleAddUser}
-                            />
-                        </Route>
-                    </Switch>
-                </Wrapper>
+                <MainTemplate>
+                    <Wrapper>
+                        <Switch>
+                            <Route path="/" exact>
+                                <Dashboard
+                                    users={users}
+                                    isLoading={isLoading}
+                                    deleteUser={deleteUser}
+                                />
+                            </Route>
+                            <Route path="/add-user">
+                                <AddUser
+                                    handleInputChange={handleInputChange}
+                                    formValues={formValues}
+                                    handleAddUser={handleAddUser}
+                                />
+                            </Route>
+                        </Switch>
+                    </Wrapper>
+                </MainTemplate>
             </ThemeProvider>
         </Router>
     );
