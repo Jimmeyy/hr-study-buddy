@@ -17,6 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:verbose": "react-scripts test --env=jsdom --verbose",
     "eject": "react-scripts eject",
     "pre-commit": "lint-staged",
     "prettier": "prettier --write ./src/"

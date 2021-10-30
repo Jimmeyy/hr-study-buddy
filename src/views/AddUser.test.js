@@ -12,16 +12,16 @@ describe('AddUser View', () => {
                 <Dashboard />
             </>
         );
-        const name = screen.queryByTestId('Name');
-        const attendace = screen.queryByTestId('Attendance');
-        const average = screen.queryByTestId('Average');
-        const submit = screen.queryByText('Add');
+        const name = screen.getByTestId('Name');
+        const attendace = screen.getByTestId('Attendance');
+        const average = screen.getByTestId('Average');
+        const submit = screen.getByText('Add');
 
         fireEvent.change(name, { target: { value: 'Damian' } });
         fireEvent.change(attendace, { target: { value: '55%' } });
         fireEvent.change(average, { target: { value: '4.5' } });
         fireEvent.click(submit);
 
-        screen.queryByText('Damian');
+        screen.getByText('Damian');
     });
 });
