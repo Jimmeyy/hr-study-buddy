@@ -5,7 +5,7 @@ export const users = [
         average: '2.3',
     },
     {
-        name: 'Krzysztof Batko',
+        name: 'Krzysztof Bąk',
         attendance: '23',
         average: '3.3',
     },
