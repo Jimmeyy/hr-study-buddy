@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useReducer, useEffect, useRef } from 'react';
 import FormField from 'components/molecules/FormField/FormField';
 import { Button } from 'components/atoms/Button/Button';
 import { ViewWrapper } from 'components/molecules/ViewWrapper/ViewWrapper';
@@ -44,6 +44,11 @@ const AddUser = () => {
         initialFormState
     );
     const { handleAddUser } = useContext(UsersContext);
+    const nameInputRef = useRef(null);
+
+    useEffect(() => {
+        nameInputRef.current.focus();
+    }, []);
 
     const handleInputChange = (event) => {
         dispatchFormValues({
@@ -84,6 +89,7 @@ const AddUser = () => {
                 name="name"
                 value={formValues.name}
                 onChange={handleInputChange}
+                ref={nameInputRef}
             />
             <FormField
                 label="Attendance"
