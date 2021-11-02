@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useReducer } from 'react';
 import FormField from 'components/molecules/FormField/FormField';
 import { Button } from 'components/atoms/Button/Button';
 import { ViewWrapper } from 'components/molecules/ViewWrapper/ViewWrapper';
@@ -9,24 +9,70 @@ const initialFormState = {
     name: '',
     attendance: '',
     average: '',
+    consent: false,
+    error: '',
+};
+
+const reducerFormValues = (state, action) => {
+    switch (action.type) {
+        case 'INPUT CHANGE':
+            return {
+                ...state,
+                [action.field]: action.value,
+            };
+        case 'CHECKBOX CHANGE':
+            return {
+                ...state,
+                consent: !state.consent,
+            };
+        case 'THROW ERROR':
+            return {
+                ...state,
+                error: action.errorMsg,
+            };
+        case 'CLEAR VALUES':
+            return initialFormState;
+        default:
+            return state;
+    }
 };
 
 const AddUser = () => {
-    const [formValues, setFormValues] = useState(initialFormState);
+    // const [formValues, setFormValues] = useState(initialFormState);
+    const [formValues, dispatchFormValues] = useReducer(
+        reducerFormValues,
+        initialFormState
+    );
     const { handleAddUser } = useContext(UsersContext);
 
     const handleInputChange = (event) => {
-        setFormValues({
-            ...formValues,
-            [event.target.name]: event.target.value,
+        dispatchFormValues({
+            type: 'INPUT CHANGE',
+            field: event.target.name,
+            value: event.target.value,
+        });
+    };
+
+    const handleCheckboxChange = (event) => {
+        dispatchFormValues({
+            type: 'CHECKBOX CHANGE',
         });
     };
 
     const handleSubmitUser = (event) => {
         event.preventDefault();
-        handleAddUser(formValues);
 
-        setFormValues(initialFormState);
+        if (formValues.consent) {
+            handleAddUser(formValues);
+            dispatchFormValues({
+                type: 'CLEAR VALUES',
+            });
+        } else {
+            dispatchFormValues({
+                type: 'THROW ERROR',
+                errorMsg: 'You need to check checkbox to send the from',
+            });
+        }
     };
 
     return (
@@ -53,7 +99,16 @@ const AddUser = () => {
                 value={formValues.average}
                 onChange={handleInputChange}
             />
+            <FormField
+                label="Consent"
+                id="consent"
+                name="consent"
+                value={formValues.consent}
+                onChange={handleCheckboxChange}
+                type="checkbox"
+            />
             <Button type="submit">Add</Button>
+            {formValues.error && <p>{formValues.error}</p>}
         </ViewWrapper>
     );
 };

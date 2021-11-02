@@ -43,7 +43,7 @@ FormField.propTypes = {
     name: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
     type: PropTypes.string,
-    value: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]).isRequired,
     onChange: PropTypes.func,
 };
 
